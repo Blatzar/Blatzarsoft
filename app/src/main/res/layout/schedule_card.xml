@@ -1,0 +1,60 @@
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager"
+        android:background="@android:color/white"
+        tools:context=".ui.schedule.ScheduleFragmentBar">
+
+    <androidx.cardview.widget.CardView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/colorPrimary"
+            android:background="@android:color/black"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+    >
+        <TextView
+                android:id="@+id/textMain"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="160dp"
+                android:text="@string/placeholder_lesson"
+        >
+
+        </TextView>
+        <TextView
+                android:id="@+id/textRoom"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="@string/placeholder_location"
+        >
+
+        </TextView>
+        <TextView
+                android:id="@+id/textTime"
+                android:layout_gravity="top|end"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:text="@string/placeholder_time"
+        >
+
+        </TextView>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>
