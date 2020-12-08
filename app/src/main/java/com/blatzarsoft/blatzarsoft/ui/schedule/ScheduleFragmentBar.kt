@@ -1,5 +1,6 @@
 package com.blatzarsoft.blatzarsoft.ui.schedule
 
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,8 +35,15 @@ class ScheduleFragmentBar : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewPager.adapter = ViewPager2Adapter(activity as AppCompatActivity, 5)
+
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        val day = calendar.get(Calendar.DAY_OF_WEEK)
+
+        if ((day >= Calendar.MONDAY) && (day <= Calendar.FRIDAY)) {
+            viewPager.currentItem = day - 1
+        }
         TabLayoutMediator(
             tabs, viewPager
         ) { tab, position ->

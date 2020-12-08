@@ -1,18 +1,23 @@
 package com.blatzarsoft.blatzarsoft.ui.lunch
 
 import android.content.Context
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
 import com.blatzarsoft.blatzarsoft.R
+import com.blatzarsoft.blatzarsoft.ui.schedule.toPx
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import khttp.get
 import kotlinx.android.synthetic.main.fragment_lunch.*
+import kotlin.concurrent.thread
 
 
 data class Lunch(
@@ -50,12 +55,48 @@ class LunchFragment : Fragment() {
 
     private lateinit var lunchViewModel: LunchViewModel
 
-    private fun displayLunch() {
-        // val calendar = Calendar.getInstance()
-        // val week = calendar.get(Calendar.WEEK_OF_YEAR)
-        // Starting from 0
-        // val day = calendar.get(Calendar.DAY_OF_WEEK) - 1
+    private fun updateTime() {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        val currentDay = calendar.get(Calendar.DAY_OF_WEEK)
+        val calendarList = listOf<CardView>(monday, tuesday, wednesday, thursday, friday)
+        thread {
+            for (day in 0..4) {
+                val lunchParams: ConstraintLayout.LayoutParams = ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT, // view width
+                    0 // view height
+                )
 
+                when (day) {
+                    0 -> {
+                        lunchParams.topToBottom = weekCard.id
+                        lunchParams.bottomToTop = tuesday.id
+                    }
+                    4 -> {
+                        lunchParams.topToBottom = thursday.id
+                        lunchParams.bottomToBottom = lunchRoot.id
+                    }
+                    else -> {
+                        lunchParams.topToBottom = calendarList[day - 1].id
+                        lunchParams.bottomToTop = calendarList[day + 1].id
+                    }
+                }
+
+                if (currentDay - 1 == day) {
+                    lunchParams.setMargins(0.toPx, 10.toPx, 0.toPx, 10.toPx)
+                    calendarList[currentDay - 1].radius = 0F
+                } else {
+                    lunchParams.setMargins(10.toPx, 10.toPx, 10.toPx, 10.toPx)
+                }
+                activity?.runOnUiThread {
+                    calendarList[day].layoutParams = lunchParams
+                }
+            }
+        }
+
+    }
+
+    private fun displayLunch() {
         // Gets the schedule list from MainActivity.kt
         val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
         val lunchObject = object : TypeToken<List<Lunch>>() {}.type
@@ -73,6 +114,7 @@ class LunchFragment : Fragment() {
                 weekText.text = "Vecka ${lunch.week}"
             }
         }
+        updateTime()
     }
 
     override fun onCreateView(
@@ -88,10 +130,12 @@ class LunchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayLunch()
+        updateTime()
 
         // Currently pretty useless
         lunchRefreshLayout.setOnRefreshListener {
             displayLunch()
+            updateTime()
             lunchRefreshLayout.isRefreshing = false
         }
     }

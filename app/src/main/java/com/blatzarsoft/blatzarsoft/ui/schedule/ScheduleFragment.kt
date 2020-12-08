@@ -1,6 +1,5 @@
 package com.blatzarsoft.blatzarsoft.ui.schedule
 
-
 import android.content.Context
 import android.content.res.Resources
 import android.icu.util.Calendar
@@ -20,7 +19,9 @@ import com.google.gson.reflect.TypeToken
 import khttp.get
 import kotlinx.android.synthetic.main.fragment_schedule.*
 import kotlinx.android.synthetic.main.schedule_card.view.*
-
+import java.util.Timer
+import kotlin.concurrent.schedule
+import kotlin.concurrent.thread
 
 data class Lesson(
     val weeksString: String,
@@ -90,13 +91,46 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         }
     }
 
+    private val calendar = Calendar.getInstance()
+    private val sizeMultiplier = 1
+    private val scheduleStartHour = 8
+    private val scheduleStartOffset = 10.toPx
+
+    private fun updateTime() {
+        thread {
+            val offset =
+                ((calendar.get(Calendar.HOUR_OF_DAY) - scheduleStartHour) * 60 + calendar.get(Calendar.MINUTE) + scheduleStartOffset) *
+                        // -3 to center it (half of height).
+                        sizeMultiplier - 3.toPx
+
+            val timeLeftParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                10.toPx, // view width
+                6.toPx // view height
+            )
+            timeLeftParams.topMargin = offset.toPx
+            timeLeftParams.marginStart = (-5).toPx
+
+            val timeRightParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                10.toPx, // view width
+                6.toPx // view height
+            )
+            timeRightParams.topMargin = offset.toPx
+            timeRightParams.marginEnd = (-5).toPx
+            timeRightParams.addRule(RelativeLayout.ALIGN_PARENT_END)
+            activity?.runOnUiThread {
+                timeLeft.layoutParams = timeLeftParams
+                timeRight.layoutParams = timeRightParams
+            }
+        }
+    }
+
     private fun displayLessons() {
-        val calendar = Calendar.getInstance()
+        updateTime()
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
         // Starting from 0
         //val day = calendar.get(Calendar.DAY_OF_WEEK) - 1
-        // Gets the schedule list from MainActivity.kt
 
+        // Gets the schedule list from MainActivity.kt
         val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
         val lessonObject = object : TypeToken<List<Lesson>>() {}.type
         val gson = Gson()
@@ -106,9 +140,6 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         arguments?.getInt("position")?.let { day ->
             if (lessons.isNotEmpty()) {
                 val timeRegex = Regex("""(\d{2}):(\d{2})""")
-                val sizeMultiplier = 1
-                val scheduleStartHour = 8
-                val scheduleStartOffset = 10.toPx
                 lessons.forEach {
                     val weeks = weekStringToList(it.weeksString)
                     if (week in weeks && it.dayId == day) {
@@ -193,5 +224,8 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayLessons()
+        Timer("TimeOffset", false).schedule(10000) {
+            updateTime()
+        }
     }
 }

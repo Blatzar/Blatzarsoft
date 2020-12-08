@@ -2,23 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/mobile_navigation"
-            app:startDestination="@+id/navigation_home">
+            android:id="@+id/nav_view"
+            app:startDestination="@+id/navigation_schedule">
 
     <fragment
-            android:id="@+id/navigation_home"
+            android:id="@+id/navigation_lunch"
             android:name="com.blatzarsoft.blatzarsoft.ui.lunch.LunchFragment"
             android:label="@string/title_home"
             tools:layout="@layout/fragment_lunch"/>
 
     <fragment
-            android:id="@+id/navigation_dashboard"
+            android:id="@+id/navigation_schedule"
             android:name="com.blatzarsoft.blatzarsoft.ui.schedule.ScheduleFragmentBar"
             android:label="@string/title_dashboard"
             tools:layout="@layout/fragment_schedule_bar"/>
 
     <fragment
-            android:id="@+id/navigation_notifications"
+            android:id="@+id/navigation_settings"
             android:name="com.blatzarsoft.blatzarsoft.ui.settings.SettingsFragment"
             android:label="@string/title_notifications"
             tools:layout="@layout/fragment_settings"/>
