@@ -9,9 +9,30 @@
         android:backgroundTint="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
->
-    <com.google.android.material.appbar.AppBarLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+            android:id="@+id/weekCard"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:backgroundTint="@color/colorPrimary"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="0dp"
+    >
 
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:textStyle="bold"
+                  android:gravity="center"
+                  android:id="@+id/weekText"
+                  android:textColor="@android:color/white"
+                  android:text="@string/week_placeholder"
+        >
+        </TextView>
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.appbar.AppBarLayout
+            app:elevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -23,11 +44,29 @@
                 android:layout_height="wrap_content"/>
 
     </com.google.android.material.appbar.AppBarLayout>
-    <androidx.viewpager2.widget.ViewPager2
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/viewPager"
-    >
-    </androidx.viewpager2.widget.ViewPager2>
+            android:layout_height="match_parent">
+        <androidx.viewpager2.widget.ViewPager2
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/viewPager"
+        >
+        </androidx.viewpager2.widget.ViewPager2>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/weekButton"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/sharp_date_range_24"
+                android:tint="@android:color/white"
+        >
+
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+    </RelativeLayout>
 </LinearLayout>
 

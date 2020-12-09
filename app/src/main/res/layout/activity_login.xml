@@ -16,7 +16,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:background="@drawable/blue"
+                android:background="@color/colorPrimary"
                 tools:context=".MainActivity">
 
             <TextView

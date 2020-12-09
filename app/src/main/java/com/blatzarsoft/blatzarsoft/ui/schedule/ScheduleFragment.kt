@@ -3,6 +3,7 @@ package com.blatzarsoft.blatzarsoft.ui.schedule
 import android.content.Context
 import android.content.res.Resources
 import android.icu.util.Calendar
+import android.icu.util.TimeUnit
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,8 +19,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import khttp.get
 import kotlinx.android.synthetic.main.fragment_schedule.*
+import kotlinx.android.synthetic.main.fragment_schedule_bar.*
 import kotlinx.android.synthetic.main.schedule_card.view.*
-import java.util.Timer
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
 
@@ -91,32 +94,31 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private val calendar = Calendar.getInstance()
     private val sizeMultiplier = 1
     private val scheduleStartHour = 8
     private val scheduleStartOffset = 10.toPx
 
     private fun updateTime() {
+        // Needs to be here because it doesn't get updated if time is changed on the device.
+        val calendar = Calendar.getInstance()
         thread {
             val offset =
-                ((calendar.get(Calendar.HOUR_OF_DAY) - scheduleStartHour) * 60 + calendar.get(Calendar.MINUTE) + scheduleStartOffset) *
-                        // -3 to center it (half of height).
-                        sizeMultiplier - 3.toPx
-
-            val timeLeftParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
-                10.toPx, // view width
-                6.toPx // view height
-            )
-            timeLeftParams.topMargin = offset.toPx
-            timeLeftParams.marginStart = (-5).toPx
+                (((calendar.get(Calendar.HOUR_OF_DAY) - scheduleStartHour) * 60 + calendar.get(Calendar.MINUTE)) * sizeMultiplier).toPx + scheduleStartOffset - 3.toPx
 
             val timeRightParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
                 10.toPx, // view width
                 6.toPx // view height
             )
-            timeRightParams.topMargin = offset.toPx
+            timeRightParams.topMargin = offset
             timeRightParams.marginEnd = (-5).toPx
             timeRightParams.addRule(RelativeLayout.ALIGN_PARENT_END)
+            val timeLeftParams: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                10.toPx, // view width
+                6.toPx // view height
+            )
+            timeLeftParams.topMargin = offset
+            timeLeftParams.marginStart = (-5).toPx
+
             activity?.runOnUiThread {
                 timeLeft.layoutParams = timeLeftParams
                 timeRight.layoutParams = timeRightParams
@@ -126,9 +128,8 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
 
     private fun displayLessons() {
         updateTime()
+        val calendar = Calendar.getInstance()
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
-        // Starting from 0
-        //val day = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
         // Gets the schedule list from MainActivity.kt
         val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
@@ -224,8 +225,12 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayLessons()
-        Timer("TimeOffset", false).schedule(10000) {
-            updateTime()
+
+        thread {
+            while (true) {
+                updateTime()
+                Thread.sleep(10000L)
+            }
         }
     }
 }

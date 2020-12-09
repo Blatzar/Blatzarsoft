@@ -12,6 +12,8 @@ import com.blatzarsoft.blatzarsoft.ViewPager2Adapter
 import com.blatzarsoft.blatzarsoft.R
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_schedule_bar.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class ScheduleFragmentBar : Fragment() {
@@ -38,9 +40,14 @@ class ScheduleFragmentBar : Fragment() {
         viewPager.adapter = ViewPager2Adapter(activity as AppCompatActivity, 5)
 
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        val day = calendar.get(Calendar.DAY_OF_WEEK)
+        val week = calendar.get(Calendar.WEEK_OF_YEAR)
+        val day = SimpleDateFormat("u", Locale.ENGLISH).format(calendar.time.time).toInt()
+        weekButton.setOnClickListener {
 
+        }
+        //val fragment = activity?.supportFragmentManager?.findFragmentById(R.id.relativeRoot)
+        // TODO https://developer.android.com/guide/fragments/communicate
+        weekText.text = "Vecka $week"
         if ((day >= Calendar.MONDAY) && (day <= Calendar.FRIDAY)) {
             viewPager.currentItem = day - 1
         }

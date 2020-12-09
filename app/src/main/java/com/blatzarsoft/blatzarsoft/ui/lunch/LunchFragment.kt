@@ -1,7 +1,6 @@
 package com.blatzarsoft.blatzarsoft.ui.lunch
 
 import android.content.Context
-import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +18,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import khttp.get
 import kotlinx.android.synthetic.main.fragment_lunch.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
 import kotlin.concurrent.thread
 
 
@@ -59,8 +64,8 @@ class LunchFragment : Fragment() {
 
     private fun updateTime() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        val currentDay = calendar.get(Calendar.DAY_OF_WEEK)
+        val currentDay = SimpleDateFormat("u", Locale.ENGLISH).format(calendar.time.time).toInt()
+
         val calendarList = listOf<CardView>(monday, tuesday, wednesday, thursday, friday)
         thread {
             for (day in 0..4) {
@@ -85,13 +90,16 @@ class LunchFragment : Fragment() {
                 }
 
                 if (currentDay - 1 == day) {
+                    calendarList[day].alpha = 1F
                     lunchParams.setMargins(5.toPx, 5.toPx, 5.toPx, 5.toPx)
                     calendarList[day].backgroundTintList =
                         context?.let { ContextCompat.getColorStateList(it, R.color.colorPrimaryDark) }
 
                 } else {
-                    calendarList[day].alpha = 0.6F
+                    calendarList[day].alpha = 0.7F
                     lunchParams.setMargins(10.toPx, 5.toPx, 10.toPx, 5.toPx)
+                    calendarList[day].backgroundTintList =
+                        context?.let { ContextCompat.getColorStateList(it, R.color.colorPrimary) }
                 }
                 activity?.runOnUiThread {
                     calendarList[day].layoutParams = lunchParams
