@@ -3,8 +3,7 @@
 Blatzarsoft is a free and open source app to easily view schedule and lunch in the same app.
 Any and all feature requests are welcome :)
 
-<img src="./.github/screenshot_lunch.jpeg" height="300"/>
-<img src="./.github/screenshot_schedule.jpeg" height="300"/>
+<img src="./.github/screenshot_schedule.jpeg" height="300"/> <img src="./.github/screenshot_lunch.jpeg" height="300"/> 
 
 ## TODO checklist
 
