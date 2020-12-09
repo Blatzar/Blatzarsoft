@@ -1,6 +1,7 @@
 package com.blatzarsoft.blatzarsoft.ui.lunch
 
 import android.content.Context
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.beust.klaxon.Klaxon
@@ -83,10 +85,13 @@ class LunchFragment : Fragment() {
                 }
 
                 if (currentDay - 1 == day) {
-                    lunchParams.setMargins(0.toPx, 10.toPx, 0.toPx, 10.toPx)
-                    calendarList[currentDay - 1].radius = 0F
+                    lunchParams.setMargins(5.toPx, 5.toPx, 5.toPx, 5.toPx)
+                    calendarList[day].backgroundTintList =
+                        context?.let { ContextCompat.getColorStateList(it, R.color.colorPrimaryDark) }
+
                 } else {
-                    lunchParams.setMargins(10.toPx, 10.toPx, 10.toPx, 10.toPx)
+                    calendarList[day].alpha = 0.6F
+                    lunchParams.setMargins(10.toPx, 5.toPx, 10.toPx, 5.toPx)
                 }
                 activity?.runOnUiThread {
                     calendarList[day].layoutParams = lunchParams

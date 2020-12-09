@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         val school = sharedPrefLogin?.getString("school", "")
         val orgId = sharedPrefLogin?.getInt("orgId", -1)
 
-        if (school?.isNotEmpty()!! && appKey?.isNotEmpty()!! && orgId != null && orgId != -1) {
+        if (false && school?.isNotEmpty()!! && appKey?.isNotEmpty()!! && orgId != null && orgId != -1) {
             thread {
                 val token = getToken(school, appKey)
                 if (token is Token) {
