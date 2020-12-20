@@ -1,9 +1,13 @@
 package com.blatzarsoft.blatzarsoft
 
+import android.content.ClipData
 import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.beust.klaxon.Klaxon
@@ -31,16 +35,20 @@ fun getToken(school: String, appKey: String): Token? {
         } else {
             null
         }
-    }
-    catch (e: Exception){
+    } catch (e: Exception) {
         null
     }
 }
 
 
 class MainActivity : AppCompatActivity() {
+    class ListViewModel : ViewModel() {
+        private fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
+        val week = MutableLiveData<Int>().default(0)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -69,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         val school = sharedPrefLogin?.getString("school", "")
         val orgId = sharedPrefLogin?.getInt("orgId", -1)
 
-        if (false && school?.isNotEmpty()!! && appKey?.isNotEmpty()!! && orgId != null && orgId != -1) {
+        if (school?.isNotEmpty()!! && appKey?.isNotEmpty()!! && orgId != null && orgId != -1) {
             thread {
                 val token = getToken(school, appKey)
                 if (token is Token) {

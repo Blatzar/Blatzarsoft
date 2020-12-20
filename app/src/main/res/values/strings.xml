@@ -27,4 +27,5 @@
     <string name="placeholder_location">PLACEHOLDER LOCATION</string>
     <string name="placeholder_time">12:25 – 14:20</string>
     <string name="login_school_list_hint">Skola</string>
+    <string name="weekPickerText">Välj vecka</string>
 </resources>

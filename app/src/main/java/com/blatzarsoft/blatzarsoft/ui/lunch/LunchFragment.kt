@@ -6,13 +6,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.observe
 import com.beust.klaxon.Klaxon
+import com.blatzarsoft.blatzarsoft.MainActivity
 import com.blatzarsoft.blatzarsoft.R
+import com.blatzarsoft.blatzarsoft.ViewPager2Adapter
 import com.blatzarsoft.blatzarsoft.ui.schedule.toPx
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -59,8 +64,8 @@ fun getLunch(school: String, token: String, orgId: Int): List<Lunch>? {
 
 
 class LunchFragment : Fragment() {
-
     private lateinit var lunchViewModel: LunchViewModel
+    private val viewModel: MainActivity.ListViewModel by activityViewModels()
 
     private fun updateTime() {
         val calendar = Calendar.getInstance()
@@ -106,19 +111,25 @@ class LunchFragment : Fragment() {
                 }
             }
         }
-
     }
 
-    private fun displayLunch() {
+    private fun displayLunch(inputWeek: Int = 0) {
         // Gets the schedule list from MainActivity.kt
+        val calendar = Calendar.getInstance()
+        val week = if (inputWeek == 0) calendar.get(Calendar.WEEK_OF_YEAR) else inputWeek
         val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
         val lunchObject = object : TypeToken<List<Lunch>>() {}.type
         val gson = Gson()
         val lunchJson = sharedPrefSchool?.getString("lunch", "")
         if (lunchJson != "") {
             val lunchList = gson.fromJson<List<Lunch>>(lunchJson, lunchObject)
-            if (lunchList is List<Lunch>) {
-                val lunch = lunchList[0]
+            if (lunchList is List<Lunch> && lunchList.isNotEmpty()) {
+                var lunch = lunchList[0]
+                lunchList.forEach {
+                    if (it.week == week) {
+                        lunch = it
+                    }
+                }
                 mondayText.text = lunch.monday
                 tuesdayText.text = lunch.tuesday
                 wednesdayText.text = lunch.wednesday
@@ -142,7 +153,11 @@ class LunchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        displayLunch()
+
+        viewModel.week.observe(viewLifecycleOwner) {
+            displayLunch(it)
+        }
+        displayLunch(viewModel.week.value!!)
         updateTime()
 
         // Currently pretty useless

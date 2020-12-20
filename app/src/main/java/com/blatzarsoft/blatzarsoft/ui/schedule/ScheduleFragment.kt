@@ -12,8 +12,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.observe
 import com.beust.klaxon.Klaxon
+import com.blatzarsoft.blatzarsoft.MainActivity
 import com.blatzarsoft.blatzarsoft.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -126,10 +129,11 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun displayLessons() {
+    private fun displayLessons(inputWeek: Int = 0) {
         updateTime()
+        relativeRoot.removeAllViews()
         val calendar = Calendar.getInstance()
-        val week = calendar.get(Calendar.WEEK_OF_YEAR)
+        val week = if (inputWeek == 0) calendar.get(Calendar.WEEK_OF_YEAR) else inputWeek
 
         // Gets the schedule list from MainActivity.kt
         val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
@@ -207,6 +211,8 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var dashboardViewModel: ScheduleViewModel
 
+    private val viewModel: MainActivity.ListViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -224,7 +230,11 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        displayLessons()
+        viewModel.week.observe(viewLifecycleOwner) {
+            println(it)
+            displayLessons(it)
+        }
+        displayLessons(viewModel.week.value!!)
 
         thread {
             while (true) {

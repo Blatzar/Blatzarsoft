@@ -16,7 +16,7 @@
         <androidx.cardview.widget.CardView
                 android:id="@+id/weekCard"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="24dp"
                 android:backgroundTint="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:layout_editor_absoluteX="10dp"

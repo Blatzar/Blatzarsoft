@@ -40,7 +40,6 @@
                     app:cardCornerRadius="8dp"
                     app:cardElevation="5dp" android:id="@+id/cardView2"
             >
-
                 <LinearLayout
                         android:layout_centerVertical="true"
                         android:layout_width="match_parent"

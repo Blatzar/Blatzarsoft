@@ -16,4 +16,12 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
+
+    <style name="AppTheme.Picker" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:solidColor">@color/colorPrimary</item>
+        <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
 </resources>

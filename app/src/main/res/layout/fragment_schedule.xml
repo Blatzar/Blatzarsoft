@@ -8,7 +8,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:id="@+id/relativeRoot"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Negative marginTop to hide them before the code runs. -->
@@ -32,8 +31,15 @@
             android:layout_alignParentEnd="true"
     >
     </androidx.cardview.widget.CardView>
+    <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:id="@+id/relativeRoot"
+            android:layout_height="match_parent"
+    >
+        <!-- Children will appear here based on schedule_card.xml -->
 
-    <!-- Children will appear here based on schedule_card.xml -->
+    </RelativeLayout>
 
 </RelativeLayout>
 
