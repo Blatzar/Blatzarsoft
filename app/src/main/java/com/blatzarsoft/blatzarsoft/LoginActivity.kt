@@ -67,14 +67,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        /*
-        val message = intent.getStringExtra(EXTRA_MESSAGE)
-
-        val textView = findViewById<TextView>(R.id.inputName).apply {
-            text = message
-        }
-        */
-
         window.apply {
             clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -82,12 +74,11 @@ class LoginActivity : AppCompatActivity() {
             statusBarColor = Color.TRANSPARENT
         }
 
-        // Toast.makeText(this, "Text", Toast.LENGTH_SHORT).show()
         inputSchool.setEndIconOnClickListener {
             val schoolFragment = TitleFragment()
-            if (savedInstanceState == null) { // initial transaction should be wrapped like this
+            if (savedInstanceState == null) {
                 supportFragmentManager.beginTransaction()
-                    .replace(R.id.viewPager, schoolFragment)
+                    .replace(R.id.loginRoot, schoolFragment)
                     .commitAllowingStateLoss()
             }
         }

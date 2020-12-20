@@ -1,130 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools">
-    <ScrollView
+    <FrameLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:theme="@style/AppTheme"
-            android:orientation="vertical"
-            android:fillViewport="true"
-    >
-        <RelativeLayout
+            android:id="@+id/loginRoot"
+            android:orientation="vertical">
+        <ScrollView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:fitsSystemWindows="true"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:background="@color/colorPrimary"
-                tools:context=".MainActivity">
-
-            <TextView
-                    android:id="@+id/app_name"
-                    android:layout_width="wrap_content"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+        >
+            <RelativeLayout
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:fitsSystemWindows="true"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="25sp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-50dp"
-            />
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:background="@color/colorPrimary"
+                    tools:context=".MainActivity">
 
-            <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@android:color/white"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="5dp" android:id="@+id/cardView2"
-            >
-                <LinearLayout
-                        android:layout_centerVertical="true"
-                        android:layout_width="match_parent"
+                <TextView
+                        android:id="@+id/app_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-                    <TextView
+                        android:text="@string/app_name"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"
+                        android:textSize="25sp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="-50dp"
+                />
+
+                <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@android:color/white"
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="5dp" android:id="@+id/cardView2"
+                >
+                    <LinearLayout
+                            android:layout_centerVertical="true"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/login_title"
-                            android:textColor="@android:color/black"
-                            android:textStyle="bold"
-                            android:textSize="30sp"/>
-                    <TextView android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:gravity="center"
-                              android:text="@string/login_tip"
-                              android:textSize="16sp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                        <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/inputName"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                        <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/username"
-                                android:singleLine="true"
-                        >
-                        </androidx.appcompat.widget.AppCompatEditText>
-                    </com.google.android.material.textfield.TextInputLayout>
+                                android:gravity="center"
+                                android:text="@string/login_title"
+                                android:textColor="@android:color/black"
+                                android:textStyle="bold"
+                                android:textSize="30sp"/>
+                        <TextView android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:gravity="center"
+                                  android:text="@string/login_tip"
+                                  android:textSize="16sp"/>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:errorEnabled="true"
-                            android:layout_marginTop="30dp"
-                            android:id="@+id/inputPassword"
-                            app:endIconMode="password_toggle"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                        <androidx.appcompat.widget.AppCompatEditText
-                                android:id="@+id/passwordText"
+                        <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
-                                android:inputType="textPassword"
-                                android:singleLine="true"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/password">
-                        </androidx.appcompat.widget.AppCompatEditText>
+                                android:layout_marginTop="20dp"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    </com.google.android.material.textfield.TextInputLayout>
-                    <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            app:endIconDrawable="@drawable/sharp_open_in_new_24"
-                            app:endIconMode="custom"
-                            app:errorEnabled="true"
-                            app:endIconContentDescription="Välj skola"
-                            android:id="@+id/inputSchool"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                            <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/inputName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/username"
+                                    android:singleLine="true"
+                            >
+                            </androidx.appcompat.widget.AppCompatEditText>
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                        <androidx.appcompat.widget.AppCompatEditText
+                        <com.google.android.material.textfield.TextInputLayout
                                 android:layout_width="match_parent"
-                                android:id="@+id/schoolText"
-                                android:singleLine="true"
                                 android:layout_height="wrap_content"
-                                android:hint="@string/schoolname">
-                        </androidx.appcompat.widget.AppCompatEditText>
+                                app:errorEnabled="true"
+                                android:layout_marginTop="30dp"
+                                android:id="@+id/inputPassword"
+                                app:endIconMode="password_toggle"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                            <androidx.appcompat.widget.AppCompatEditText
+                                    android:id="@+id/passwordText"
+                                    android:layout_width="match_parent"
+                                    android:inputType="textPassword"
+                                    android:singleLine="true"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/password">
+                            </androidx.appcompat.widget.AppCompatEditText>
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                app:endIconDrawable="@drawable/sharp_open_in_new_24"
+                                app:endIconMode="custom"
+                                app:errorEnabled="true"
+                                app:endIconContentDescription="Välj skola"
+                                android:id="@+id/inputSchool"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_login"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:text="@string/login_button">
+                            <androidx.appcompat.widget.AppCompatEditText
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/schoolText"
+                                    android:singleLine="true"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/schoolname">
+                            </androidx.appcompat.widget.AppCompatEditText>
 
-                    </com.google.android.material.button.MaterialButton>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </RelativeLayout>
-    </ScrollView>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_login"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:text="@string/login_button">
+
+                        </com.google.android.material.button.MaterialButton>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+        </ScrollView>
+    </FrameLayout>
 </layout>
