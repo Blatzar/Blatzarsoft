@@ -8,7 +8,6 @@ Any and all feature requests are welcome :)
 ## TODO checklist
 
 - Colors for lessons
-- Week switcher
 - Settings
 - Dark mode
 - More language support (English and Swedish)
