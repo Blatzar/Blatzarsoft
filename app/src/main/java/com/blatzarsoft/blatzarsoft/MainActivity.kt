@@ -1,11 +1,9 @@
 package com.blatzarsoft.blatzarsoft
 
-import android.content.ClipData
 import android.content.Context
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
@@ -44,6 +42,7 @@ fun getToken(school: String, appKey: String): Token? {
 class MainActivity : AppCompatActivity() {
     class ListViewModel : ViewModel() {
         private fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
+        // 0 will be treated as current week.
         val week = MutableLiveData<Int>().default(0)
     }
 
@@ -91,7 +90,8 @@ class MainActivity : AppCompatActivity() {
                         putString("lunch", lunchJson)
                         apply()
                     }
-                    // Refreshes current fragment regardless of content, barbaric, but I couldn't find another way
+                    // Refreshes current fragment regardless of content
+                    // Could be done with LiveData, but this is less complex.
                     supportFragmentManager.fragments.last().onCreate(null)
                 }
             }
