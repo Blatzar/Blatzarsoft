@@ -64,7 +64,6 @@
                     android:layout_alignParentBottom="true"
                     android:layout_margin="10dp"
                     android:src="@drawable/sharp_date_range_24"
-                    android:tint="@android:color/white"
             >
 
             </com.google.android.material.floatingactionbutton.FloatingActionButton>

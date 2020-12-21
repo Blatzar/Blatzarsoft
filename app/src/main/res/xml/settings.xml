@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+            android:key="theme"
+            android:title="@string/settings_theme_category"
+    >
+        <SwitchPreferenceCompat
+                app:defaultValue="true"
+                android:key="auto_dark_mode"
+                android:summary="@string/settings_automatic_nightmode_summary"
+                app:title="@string/settings_automatic_nightmode"/>
+        <SwitchPreferenceCompat
+                android:key="dark_mode"
+                app:title="@string/settings_nightmode"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -9,6 +9,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_login.*
 import com.beust.klaxon.Klaxon
 import khttp.get
@@ -57,6 +59,25 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         // If has login credentials
         val sharedPref = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
+
+        // Setting the theme
+        val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
+        val autoDarkMode = settingsManager.getBoolean("auto_dark_mode", true)
+        val darkMode = settingsManager.getBoolean("dark_mode", false)
+
+        if (autoDarkMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+        else {
+            if (darkMode){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
+
+
         if (sharedPref.getString("appKey", "")?.isNotEmpty()!!) {
             val intent = Intent(this, MainActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, "")

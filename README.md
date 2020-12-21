@@ -7,11 +7,14 @@ Any and all feature requests are welcome :)
 
 ## TODO checklist
 
-- Colors for lessons
-- Settings
-- Dark mode
-- More language support (English and Swedish)
-- Upload to play store
+- [x] Week switcher
+- [x] Settings
+- [x] Dark mode
+- [ ] Log out button
+- [ ] Colors for lessons
+- [ ] More language support (English and Swedish)
+- [ ] Upload to play store
+- [ ] Multiple account support
 
 ## Can I trust this app with my login details?
 

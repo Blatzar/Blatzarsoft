@@ -28,4 +28,9 @@
     <string name="placeholder_time">12:25 – 14:20</string>
     <string name="login_school_list_hint">Skola</string>
     <string name="weekPickerText">Välj vecka</string>
+    <string name="settings_title">Inställningar</string>
+    <string name="settings_automatic_nightmode">Automatiskt nattläge</string>
+    <string name="settings_automatic_nightmode_summary">Baserat på telefonens tema</string>
+    <string name="settings_nightmode">Nattläge</string>
+    <string name="settings_theme_category">Tema</string>
 </resources>
