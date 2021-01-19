@@ -15,74 +15,16 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import com.beust.klaxon.Klaxon
-import com.blatzarsoft.blatzarsoft.MainActivity
-import com.blatzarsoft.blatzarsoft.R
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import khttp.get
+import com.blatzarsoft.blatzarsoft.*
 import kotlinx.android.synthetic.main.fragment_schedule.*
-import kotlinx.android.synthetic.main.fragment_schedule_bar.*
 import kotlinx.android.synthetic.main.schedule_card.view.*
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.concurrent.schedule
 import kotlin.concurrent.thread
-
-data class Lesson(
-    val weeksString: String,
-    val subjectName: String,
-    val roomName: String,
-    val length: Int,
-    val startTime: String,
-    val endTime: String,
-    val dayId: Int,
-    val id: Int
-)
+import com.blatzarsoft.blatzarsoft.SchoolSoftApi.Companion.weekStringToList
+import java.lang.System.exit
+import kotlin.system.exitProcess
 
 val Int.toPx: Int get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 val Int.toDp: Int get() = (this / Resources.getSystem().displayMetrics.density).toInt()
-
-fun getLessons(school: String, token: String, orgId: Int): List<Lesson>? {
-    val url = "https://sms.schoolsoft.se/${school}/api/lessons/student/${orgId}"
-    val payload = mapOf(
-        "appversion" to "2.3.2",
-        "appos" to "android",
-        "token" to token
-    )
-    val r = get(url, headers = payload)
-    return if (r.statusCode == 200) {
-        Klaxon().parseArray<Lesson>(r.text)
-    } else {
-        null
-    }
-}
-
-
-fun weekStringToList(weeks: String): MutableList<Int> {
-    // Converts "2, 5-8" to [2, 5, 6, 7, 8]
-    val fullList = mutableListOf<Int>()
-    val splitList = weeks.split(",")
-    splitList.forEach {
-        val splitNumbers = it.split("-")
-        val first = splitNumbers[0].trim().toIntOrNull()
-
-        if (splitNumbers.size == 1) {
-            if (first != null) {
-                fullList.add(first)
-            }
-        } else {
-            val second = splitNumbers[1].trim().toIntOrNull()
-            if (first != null && second != null) {
-                for (i in first..second) {
-                    fullList.add(i)
-                }
-            }
-        }
-    }
-    return fullList
-}
-
 
 class ScheduleFragment : androidx.fragment.app.Fragment() {
 
@@ -136,71 +78,70 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         val week = if (inputWeek == 0) calendar.get(Calendar.WEEK_OF_YEAR) else inputWeek
 
         // Gets the schedule list from MainActivity.kt
-        val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
-        val lessonObject = object : TypeToken<List<Lesson>>() {}.type
-        val gson = Gson()
-        val lessonsJson = sharedPrefSchool?.getString("lessons", "[]")
-        val lessons = gson.fromJson<List<Lesson>>(lessonsJson, lessonObject)
+
+        val lessons = DataStore.getKey<List<Lesson>>(SCHEDULE_DATA_KEY, "lessons", null)
 
         arguments?.getInt("position")?.let { day ->
-            if (lessons.isNotEmpty()) {
-                val timeRegex = Regex("""(\d{2}):(\d{2})""")
-                lessons.forEach {
-                    val weeks = weekStringToList(it.weeksString)
-                    if (week in weeks && it.dayId == day) {
+            if (lessons != null) {
+                if (lessons.isNotEmpty()) {
+                    val timeRegex = Regex("""(\d{2}):(\d{2})""")
+                    lessons.forEach {
+                        val weeks = weekStringToList(it.weeksString)
+                        if (week in weeks && it.dayId == day) {
 
-                        val startTime = timeRegex.find(it.startTime)
-                        val fixedStartTime = startTime?.groups?.get(0)?.value
+                            val startTime = timeRegex.find(it.startTime)
+                            val fixedStartTime = startTime?.groups?.get(0)?.value
 
-                        val startHour = startTime?.groups?.get(1)?.value?.toIntOrNull()
-                        val startMinutes = startTime?.groups?.get(2)?.value?.toIntOrNull()
+                            val startHour = startTime?.groups?.get(1)?.value?.toIntOrNull()
+                            val startMinutes = startTime?.groups?.get(2)?.value?.toIntOrNull()
 
-                        val endTime = timeRegex.find(it.endTime)
-                        val fixedEndTime = endTime?.groups?.get(0)?.value
+                            val endTime = timeRegex.find(it.endTime)
+                            val fixedEndTime = endTime?.groups?.get(0)?.value
 
-                        /*
-                        val endHour = startTime?.groups?.get(1)?.value?.toIntOrNull()
-                        val endMinutes = startTime?.groups?.get(2)?.value?.toIntOrNull()
-                        */
+                            /*
+                                val endHour = startTime?.groups?.get(1)?.value?.toIntOrNull()
+                                val endMinutes = startTime?.groups?.get(2)?.value?.toIntOrNull()
+                                */
 
-                        val card: View = layoutInflater.inflate(R.layout.schedule_card, null)
-                        card.textMain.text = it.subjectName
-                        card.textRoom.text = it.roomName
-                        card.textTime.text = "$fixedStartTime - $fixedEndTime"
+                            val card: View = layoutInflater.inflate(R.layout.schedule_card, null)
+                            card.textMain.text = it.subjectName
+                            card.textRoom.text = it.roomName
+                            card.textTime.text = "$fixedStartTime - $fixedEndTime"
 
-                        val cardHeight = (it.length * sizeMultiplier).toPx
+                            val cardHeight = (it.length * sizeMultiplier).toPx
 
-                        // Prevents overlapping time and room (hopefully).
-                        if (it.length <= 40) {
-                            val roomParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT, // view width
-                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT // view height
+                            // Prevents overlapping time and room (hopefully).
+                            if (it.length <= 40) {
+                                val roomParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT, // view width
+                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT // view height
+                                )
+                                val timeParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
+                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT, // view width
+                                    LinearLayoutCompat.LayoutParams.WRAP_CONTENT // view height
+                                )
+                                // Same as Time, but more marginEnd
+                                roomParams.gravity = Gravity.CENTER_VERTICAL or Gravity.END
+                                roomParams.marginEnd = 120.toPx
+                                timeParams.gravity = Gravity.CENTER_VERTICAL or Gravity.END
+                                timeParams.marginEnd = 20.toPx
+
+                                card.textRoom.layoutParams = roomParams
+                                card.textTime.layoutParams = timeParams
+                            }
+
+                            val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+                                LinearLayoutCompat.LayoutParams.MATCH_PARENT, // view width
+                                cardHeight // view height
                             )
-                            val timeParams: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT, // view width
-                                LinearLayoutCompat.LayoutParams.WRAP_CONTENT // view height
-                            )
-                            // Same as Time, but more marginEnd
-                            roomParams.gravity = Gravity.CENTER_VERTICAL or Gravity.END
-                            roomParams.marginEnd = 120.toPx
-                            timeParams.gravity = Gravity.CENTER_VERTICAL or Gravity.END
-                            timeParams.marginEnd = 20.toPx
+                            if (startHour != null && startMinutes != null) {
+                                params.topMargin =
+                                    (((startHour - scheduleStartHour) * 60 + startMinutes) * sizeMultiplier).toPx + scheduleStartOffset
+                                card.layoutParams = params
 
-                            card.textRoom.layoutParams = roomParams
-                            card.textTime.layoutParams = timeParams
-                        }
-
-                        val params: RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
-                            LinearLayoutCompat.LayoutParams.MATCH_PARENT, // view width
-                            cardHeight // view height
-                        )
-                        if (startHour != null && startMinutes != null) {
-                            params.topMargin =
-                                (((startHour - scheduleStartHour) * 60 + startMinutes) * sizeMultiplier).toPx + scheduleStartOffset
-                            card.layoutParams = params
-
-                            activity?.runOnUiThread {
-                                relativeRoot.addView(card)
+                                activity?.runOnUiThread {
+                                    relativeRoot.addView(card)
+                                }
                             }
                         }
                     }

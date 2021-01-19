@@ -12,10 +12,9 @@ import android.widget.ArrayAdapter
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.activity.addCallback
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.FragmentTransaction
-import com.beust.klaxon.Klaxon
+import com.blatzarsoft.blatzarsoft.DataStore.mapper
+import com.fasterxml.jackson.module.kotlin.readValue
 //import com.blatzarsoft.blatzarsoft.databinding.FragmentTitleBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -64,7 +63,7 @@ class TitleFragment : androidx.fragment.app.Fragment() {
         fun getSchools(): kotlinx.coroutines.flow.Flow<List<School>?> = flow {
             val url = "https://sms.schoolsoft.se/rest/app/schoollist/prod"
             val r = get(url)
-            val wordDict = Klaxon().parseArray<School>(r.text)
+            val wordDict = mapper.readValue<List<School>>(r.text)
             emit(wordDict)
         }
 

@@ -1,6 +1,5 @@
 package com.blatzarsoft.blatzarsoft
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -12,17 +11,12 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_login.*
-import com.beust.klaxon.Klaxon
-import khttp.get
-import java.lang.Exception
+import com.blatzarsoft.blatzarsoft.SchoolSoftApi.Companion.getAppKey
 import kotlin.concurrent.thread
 
 const val EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE"
 
 class LoginActivity : AppCompatActivity() {
-
-    data class Orgs(val orgId: Int)
-    data class Person(val name: String, val appKey: String, val orgs: List<Orgs>)
 
     override fun onBackPressed() {
         //super.onBackPressed()
@@ -30,55 +24,27 @@ class LoginActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().remove(currentFragment).commit()
     }
 
-    private fun getAppKey(school: String, name: String, password: String): Any? {
-        // Example login return
-        // """{"pictureUrl":"pictureFile.jsp?studentId=9000","name":"LagradOst","isOfAge":true,"appKey":"string",
-        // "orgs":[
-        //          {"name":"string","blogger":false,"schoolType":9,"leisureSchool":0,"class":"string","orgId":int,"tokenLogin":"url"}
-        // ],
-        // "type":1,"userId":9000}"""
-        val url = "https://sms.schoolsoft.se/${school}/rest/app/login"
-
-        val payload = mapOf(
-            "identification" to name,
-            "verification" to password,
-            "logintype" to "4",
-            "usertype" to "1"
-        )
-        try {
-            val r = get(url, data = payload)
-            if (r.statusCode != 200) {
-                return r.statusCode
-            }
-            return Klaxon().parse<Person>(r.text)
-        } catch (ex: Exception) {
-            return null
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // If has login credentials
-        val sharedPref = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
+        DataStore.init(this)
 
         // Setting the theme
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
         val autoDarkMode = settingsManager.getBoolean("auto_dark_mode", true)
         val darkMode = settingsManager.getBoolean("dark_mode", false)
 
-        if (autoDarkMode){
+        if (autoDarkMode) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }
-        else {
-            if (darkMode){
+        } else {
+            if (darkMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-            else {
+            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
 
 
-        if (sharedPref.getString("appKey", "")?.isNotEmpty()!!) {
+        if (DataStore.getKey(LOGIN_KEY, "appKey", "")?.isNotEmpty()!!) {
             val intent = Intent(this, MainActivity::class.java).apply {
                 putExtra(EXTRA_MESSAGE, "")
             }
@@ -154,13 +120,11 @@ class LoginActivity : AppCompatActivity() {
                     }
                     // Redundant but more safe for future me
                     if (appKeyResponse is Person) {
-                        with(sharedPref.edit()) {
-                            putString("name", appKeyResponse.name)
-                            putString("appKey", appKeyResponse.appKey)
-                            putInt("orgId", appKeyResponse.orgs[0].orgId)
-                            putString("school", school)
-                            apply()
-                        }
+                        DataStore.setKey(LOGIN_KEY, "name", appKeyResponse.name)
+                        DataStore.setKey(LOGIN_KEY, "appKey", appKeyResponse.appKey)
+                        DataStore.setKey(LOGIN_KEY, "orgId", appKeyResponse.orgs[0].orgId)
+                        DataStore.setKey(LOGIN_KEY, "school", school)
+
                         // Switches activity
                         val intent = Intent(this, MainActivity::class.java).apply {
                             putExtra(EXTRA_MESSAGE, "")

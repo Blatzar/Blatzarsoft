@@ -51,9 +51,8 @@ class ScheduleFragmentBar : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewPager.adapter = ViewPager2Adapter(activity as AppCompatActivity, 5)
-        val calendar = Calendar.getInstance()
+        val calendar = GregorianCalendar(Locale("sv"))
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
-
         viewModel.week.observe(viewLifecycleOwner) {
             if (it != 0) {
                 weekText.text = "Vecka $it"

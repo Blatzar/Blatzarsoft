@@ -8,40 +8,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.beust.klaxon.Klaxon
-import com.blatzarsoft.blatzarsoft.ui.lunch.getLunch
-import com.blatzarsoft.blatzarsoft.ui.schedule.getLessons
+import com.blatzarsoft.blatzarsoft.SchoolSoftApi.Companion.getLessons
+import com.blatzarsoft.blatzarsoft.SchoolSoftApi.Companion.getLunch
+import com.blatzarsoft.blatzarsoft.SchoolSoftApi.Companion.getToken
 import com.google.gson.Gson
 import kotlin.concurrent.thread
-import khttp.get
-import java.lang.Exception
-
-data class Token(val expiryDate: String, val token: String)
-
-fun getToken(school: String, appKey: String): Token? {
-    val url = "https://sms.schoolsoft.se/${school}/rest/app/token"
-    val payload = mapOf(
-        "appversion" to "2.3.2",
-        "appos" to "android",
-        "appkey" to appKey,
-        "deviceid" to ""
-    )
-    return try {
-        val r = get(url, headers = payload)
-        if (r.statusCode == 200) {
-            Klaxon().parse<Token>(r.text)
-        } else {
-            null
-        }
-    } catch (e: Exception) {
-        null
-    }
-}
 
 
 class MainActivity : AppCompatActivity() {
     class ListViewModel : ViewModel() {
         private fun <T : Any?> MutableLiveData<T>.default(initialValue: T) = apply { setValue(initialValue) }
+
         // 0 will be treated as current week.
         val week = MutableLiveData<Int>().default(0)
     }
@@ -67,29 +44,23 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
          */
         navView.setupWithNavController(navController)
-        val sharedPrefSchool = getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
-        val sharedPrefLogin = getSharedPreferences("LOGIN", Context.MODE_PRIVATE)
 
-        val gson = Gson()
-
-        val appKey = sharedPrefLogin?.getString("appKey", "")
-        val school = sharedPrefLogin?.getString("school", "")
-        val orgId = sharedPrefLogin?.getInt("orgId", -1)
+        val appKey = DataStore.getKey(LOGIN_KEY, "appKey", "")
+        val school = DataStore.getKey(LOGIN_KEY, "school", "")
+        val orgId = DataStore.getKey(LOGIN_KEY, "orgId", -1)
 
         if (school?.isNotEmpty()!! && appKey?.isNotEmpty()!! && orgId != null && orgId != -1) {
             thread {
                 val token = getToken(school, appKey)
+                println(token)
                 if (token is Token) {
                     val lessons = getLessons(school, token.token, orgId)
                     val lunch = getLunch(school, token.token, orgId)
-                    val lessonsJson = gson.toJson(lessons)
-                    val lunchJson = gson.toJson(lunch)
-
-                    with(sharedPrefSchool.edit()) {
-                        putString("lessons", lessonsJson)
-                        putString("lunch", lunchJson)
-                        apply()
+                    if (lessons != null) {
+                        DataStore.setKey<List<Lesson>>(SCHEDULE_DATA_KEY, "lessons", lessons)
                     }
+                    DataStore.setKey(SCHEDULE_DATA_KEY, "lunch", lunch)
+
                     // Refreshes current fragment regardless of content
                     // Could be done with LiveData, but this is less complex.
                     supportFragmentManager.fragments.last().onCreate(null)

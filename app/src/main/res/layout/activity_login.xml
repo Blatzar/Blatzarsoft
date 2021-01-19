@@ -57,7 +57,6 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:text="@string/login_title"
-                                android:textColor="@android:color/black"
                                 android:textStyle="bold"
                                 android:textSize="30sp"/>
                         <TextView android:layout_width="match_parent"

@@ -14,14 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import com.beust.klaxon.Klaxon
-import com.blatzarsoft.blatzarsoft.MainActivity
-import com.blatzarsoft.blatzarsoft.R
-import com.blatzarsoft.blatzarsoft.ViewPager2Adapter
+import com.blatzarsoft.blatzarsoft.*
 import com.blatzarsoft.blatzarsoft.ui.schedule.toPx
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import khttp.get
 import kotlinx.android.synthetic.main.fragment_lunch.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -30,37 +26,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.concurrent.thread
-
-
-data class Lunch(
-    val week: Int,
-    val dates: List<String>,
-
-    val monday: String,
-    val tuesday: String,
-    val wednesday: String,
-    val thursday: String,
-    val friday: String,
-    // Not used
-    val saturday: String,
-    val sunday: String
-)
-
-
-fun getLunch(school: String, token: String, orgId: Int): List<Lunch>? {
-    val url = "https://sms.schoolsoft.se/${school}/api/lunchmenus/student/${orgId}"
-    val payload = mapOf(
-        "appversion" to "2.3.2",
-        "appos" to "android",
-        "token" to token
-    )
-    val r = get(url, headers = payload)
-    return if (r.statusCode == 200) {
-        Klaxon().parseArray<Lunch>(r.text)
-    } else {
-        null
-    }
-}
 
 
 class LunchFragment : Fragment() {
@@ -117,13 +82,10 @@ class LunchFragment : Fragment() {
         // Gets the schedule list from MainActivity.kt
         val calendar = Calendar.getInstance()
         val week = if (inputWeek == 0) calendar.get(Calendar.WEEK_OF_YEAR) else inputWeek
-        val sharedPrefSchool = activity?.getSharedPreferences("SCHOOL", Context.MODE_PRIVATE)
-        val lunchObject = object : TypeToken<List<Lunch>>() {}.type
-        val gson = Gson()
-        val lunchJson = sharedPrefSchool?.getString("lunch", "")
-        if (lunchJson != "") {
-            val lunchList = gson.fromJson<List<Lunch>>(lunchJson, lunchObject)
-            if (lunchList is List<Lunch> && lunchList.isNotEmpty()) {
+        val lunchList = DataStore.getKey<List<Lunch>>(SCHEDULE_DATA_KEY, "lunch", null)
+
+        if (lunchList != null) {
+            if (lunchList.isNotEmpty()) {
                 var lunch = lunchList[0]
                 lunchList.forEach {
                     if (it.week == week) {
