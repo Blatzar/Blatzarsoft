@@ -2,6 +2,7 @@ package com.blatzarsoft.blatzarsoft.ui.schedule
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Color
 import android.icu.util.Calendar
 import android.icu.util.TimeUnit
 import android.os.Bundle
@@ -81,12 +82,36 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
 
         val lessons = DataStore.getKey<List<Lesson>>(SCHEDULE_DATA_KEY, "lessons", null)
 
+        // Kinda badly done
+        val colorList = mapOf(
+            "#3123A8" to "Dark Blue",
+            "#23A893" to "Light Green",
+            "#B8A83D" to "Yellow",
+            "#7E30B4" to "Dark Purple",
+            "#0E4B16" to "Very Dark Green",
+            "#AD2222" to "Dark Red",
+            "#BB4411" to "Dark Orange",
+            "#C847D6" to "Pink",
+            "#D48015" to "Orange",
+            "#2CB5F8" to "Light Blue",
+            "#395859" to "Dark Green"
+        )
+        val colors = colorList.keys.toList()
+        val colorsToLessons = mutableMapOf<String, String>()
+        var colorIndex = 0
         arguments?.getInt("position")?.let { day ->
             if (lessons != null) {
                 if (lessons.isNotEmpty()) {
                     val timeRegex = Regex("""(\d{2}):(\d{2})""")
                     lessons.forEach {
                         val weeks = weekStringToList(it.weeksString)
+                        val color = colorsToLessons.getOrDefault(it.subjectName, "")
+                        if (color == "") {
+                            colorsToLessons[it.subjectName] = colors[colorIndex]
+                            colorIndex = if (colorIndex + 1 > colors.size - 1) 0 else colorIndex + 1
+                        } else {
+                            colorsToLessons[it.subjectName] = color
+                        }
                         if (week in weeks && it.dayId == day) {
 
                             val startTime = timeRegex.find(it.startTime)
@@ -107,8 +132,10 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
                             card.textMain.text = it.subjectName
                             card.textRoom.text = it.roomName
                             card.textTime.text = "$fixedStartTime - $fixedEndTime"
-
                             val cardHeight = (it.length * sizeMultiplier).toPx
+
+                            println(colorsToLessons)
+                            card.cardView.background.setTint(Color.parseColor(colorsToLessons[it.subjectName]))
 
                             // Prevents overlapping time and room (hopefully).
                             if (it.length <= 40) {
