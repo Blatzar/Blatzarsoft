@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import com.blatzarsoft.blatzarsoft.*
@@ -177,8 +178,6 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private lateinit var dashboardViewModel: ScheduleViewModel
-
     private val viewModel: MainActivity.ListViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -186,8 +185,6 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
         /*val textView: TextView = root.findViewById(R.id.testText)
         dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
@@ -199,7 +196,6 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.week.observe(viewLifecycleOwner) {
-            println(it)
             displayLessons(it)
         }
         displayLessons(viewModel.week.value!!)

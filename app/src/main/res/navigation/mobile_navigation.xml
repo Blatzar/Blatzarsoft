@@ -20,6 +20,6 @@
     <fragment
             android:id="@+id/navigation_settings"
             android:name="com.blatzarsoft.blatzarsoft.ui.settings.SettingsFragment"
-            android:label="@string/title_notifications"
+            android:label="@string/settings_title"
             tools:layout="@xml/settings"/>
 </navigation>

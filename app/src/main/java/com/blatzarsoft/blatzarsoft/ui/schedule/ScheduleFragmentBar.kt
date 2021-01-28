@@ -11,6 +11,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import com.blatzarsoft.blatzarsoft.MainActivity
@@ -29,7 +30,7 @@ import kotlin.concurrent.thread
 
 class ScheduleFragmentBar : Fragment() {
 
-    private lateinit var dashboardViewModel: ScheduleViewModel
+
 
     private val viewModel: MainActivity.ListViewModel by activityViewModels()
 
@@ -38,8 +39,6 @@ class ScheduleFragmentBar : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-            ViewModelProviders.of(this).get(ScheduleViewModel::class.java)
         /*val textView: TextView = root.findViewById(R.id.testText)
         dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
@@ -55,7 +54,7 @@ class ScheduleFragmentBar : Fragment() {
         val week = calendar.get(Calendar.WEEK_OF_YEAR)
         viewModel.week.observe(viewLifecycleOwner) {
             if (it != 0) {
-                weekText.text = "Vecka $it"
+                weekText.text = String.format(resources.getString(R.string.week_number), it)
             }
             // When a week is changed all the lessons gets deleted
             //val root: RelativeLayout? = view.findViewById(R.id.relativeRoot)
@@ -96,7 +95,7 @@ class ScheduleFragmentBar : Fragment() {
             }
         }
 
-        weekText.text = "Vecka $week"
+        weekText.text = String.format(resources.getString(R.string.week_number), week)
 
         if ((day >= Calendar.MONDAY) && (day <= Calendar.FRIDAY)) {
             viewPager.currentItem = day - 1
@@ -106,19 +105,19 @@ class ScheduleFragmentBar : Fragment() {
         ) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "Måndag"
+                    tab.text = resources.getString(R.string.monday)
                 }
                 1 -> {
-                    tab.text = "Tisdag"
+                    tab.text = resources.getString(R.string.tuesday)
                 }
                 2 -> {
-                    tab.text = "Onsdag"
+                    tab.text = resources.getString(R.string.wednesday)
                 }
                 3 -> {
-                    tab.text = "Torsdag"
+                    tab.text = resources.getString(R.string.thursday)
                 }
                 4 -> {
-                    tab.text = "Fredag"
+                    tab.text = resources.getString(R.string.friday)
                 }
             }
         }.attach()

@@ -1,34 +1,28 @@
 package com.blatzarsoft.blatzarsoft.ui.lunch
 
-import android.content.Context
 import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import com.blatzarsoft.blatzarsoft.*
 import com.blatzarsoft.blatzarsoft.ui.schedule.toPx
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_lunch.*
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 import kotlin.concurrent.thread
 
 
 class LunchFragment : Fragment() {
+    class LunchViewModel : ViewModel() {}
     private lateinit var lunchViewModel: LunchViewModel
     private val viewModel: MainActivity.ListViewModel by activityViewModels()
 
@@ -69,7 +63,7 @@ class LunchFragment : Fragment() {
                     calendarList[day].alpha = 0.7F
                     lunchParams.setMargins(10.toPx, 5.toPx, 10.toPx, 5.toPx)
                     calendarList[day].backgroundTintList =
-                        context?.let { ContextCompat.getColorStateList(it, R.color.colorPrimary) }
+                        context?.let { ContextCompat.getColorStateList(it, R.color.black_overlay) }
                 }
                 activity?.runOnUiThread {
                     calendarList[day].layoutParams = lunchParams
@@ -97,7 +91,7 @@ class LunchFragment : Fragment() {
                 wednesdayText.text = lunch.wednesday
                 thursdayText.text = lunch.thursday
                 fridayText.text = lunch.friday
-                weekText.text = "Vecka ${lunch.week}"
+                weekText.text = String.format(resources.getString(R.string.week_number), lunch.week)
             }
         }
         updateTime()

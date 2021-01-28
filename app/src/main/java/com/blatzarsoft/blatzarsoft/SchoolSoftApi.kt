@@ -4,7 +4,6 @@ import com.blatzarsoft.blatzarsoft.DataStore.mapper
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.readValue
 import khttp.get
-import kotlin.concurrent.thread
 
 data class Lunch(
     @JsonProperty("week") val week: Int,

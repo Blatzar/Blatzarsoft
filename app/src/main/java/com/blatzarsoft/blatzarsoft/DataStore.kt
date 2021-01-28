@@ -86,7 +86,6 @@ object DataStore {
     inline fun <reified T : Any> getKey(path: String, defVal: T?): T? {
         try {
             val json: String = getSharedPrefs().getString(path, null) ?: return defVal
-            println(json)
             return json.toKotlinObject()
         } catch (e: Exception) {
             return null

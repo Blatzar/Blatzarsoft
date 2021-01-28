@@ -31,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         // Setting the theme
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(this)
         val autoDarkMode = settingsManager.getBoolean("auto_dark_mode", true)
+
         val darkMode = settingsManager.getBoolean("dark_mode", false)
 
         if (autoDarkMode) {
@@ -103,18 +104,17 @@ class LoginActivity : AppCompatActivity() {
                     val appKeyResponse = getAppKey(school, name, password)
                     runOnUiThread {
                         when (appKeyResponse) {
-                            // TODO STRING RESOURCES
                             404 -> {
-                                inputSchool.error = "Kan inte ansluta till skola"
+                                inputSchool.error = resources.getString(R.string.error_404)
                             }
                             401 -> {
-                                inputPassword.error = "Felaktig inloggningsinformation"
+                                inputPassword.error = resources.getString(R.string.error_401)
                             }
                             null -> {
-                                inputPassword.error = "Fel i inloggningen, kolla din anslutning."
+                                inputPassword.error = resources.getString(R.string.error_network)
                             }
                             is Int -> {
-                                inputPassword.error = "Error: $appKeyResponse"
+                                inputPassword.error = String.format(resources.getString(R.string.error_generic), appKeyResponse)
                             }
                         }
                     }

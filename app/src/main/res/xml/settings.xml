@@ -7,12 +7,23 @@
             android:title="@string/settings_theme_category"
     >
         <SwitchPreferenceCompat
+                android:icon="@drawable/ic_baseline_perm_device_information_24"
                 app:defaultValue="true"
                 android:key="auto_dark_mode"
                 android:summary="@string/settings_automatic_nightmode_summary"
                 app:title="@string/settings_automatic_nightmode"/>
         <SwitchPreferenceCompat
+                android:icon="@drawable/ic_baseline_nights_stay_24"
                 android:key="dark_mode"
                 app:title="@string/settings_nightmode"/>
+    </PreferenceCategory>
+        <PreferenceCategory
+            android:key="settings_language_category"
+            android:title="@string/settings_language_category"
+    >
+    <SwitchPreferenceCompat
+            android:icon="@drawable/ic_baseline_language_24"
+            android:key="language"
+            app:title="@string/settings_language"/>
     </PreferenceCategory>
 </PreferenceScreen>
