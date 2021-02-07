@@ -207,4 +207,10 @@ class ScheduleFragment : androidx.fragment.app.Fragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        displayLessons(viewModel.week.value!!)
+    }
+
 }

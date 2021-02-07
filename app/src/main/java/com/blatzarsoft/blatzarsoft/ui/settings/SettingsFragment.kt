@@ -47,7 +47,7 @@ open class BaseActivity : AppCompatActivity() {
     override fun attachBaseContext(newBase: Context) {
 // get chosen language from shread preference
         val settingsManager = PreferenceManager.getDefaultSharedPreferences(newBase)
-        val useEnglish = settingsManager.getBoolean("language", false)
+        val useEnglish = settingsManager.getBoolean("language", true)
         val language = if (useEnglish) "en" else "sv"
         val localeToSwitchTo = Locale(language)
         val localeUpdatedContext: ContextWrapper = ContextUtils.updateLocale(newBase, localeToSwitchTo)

@@ -31,7 +31,6 @@ import kotlin.concurrent.thread
 class ScheduleFragmentBar : Fragment() {
 
 
-
     private val viewModel: MainActivity.ListViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -51,7 +50,12 @@ class ScheduleFragmentBar : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewPager.adapter = ViewPager2Adapter(activity as AppCompatActivity, 5)
         val calendar = GregorianCalendar(Locale("sv"))
-        val week = calendar.get(Calendar.WEEK_OF_YEAR)
+        // Week gets bumped up by one if end of week
+        val week =
+            if (listOf(Calendar.SATURDAY, Calendar.SUNDAY).contains(calendar.get(Calendar.DAY_OF_WEEK))) minOf(calendar.get(
+                Calendar.WEEK_OF_YEAR
+            ) + 1, 52) else calendar.get(Calendar.WEEK_OF_YEAR)
+
         viewModel.week.observe(viewLifecycleOwner) {
             if (it != 0) {
                 weekText.text = String.format(resources.getString(R.string.week_number), it)

@@ -24,6 +24,7 @@
     <SwitchPreferenceCompat
             android:icon="@drawable/ic_baseline_language_24"
             android:key="language"
+            android:defaultValue="true"
             app:title="@string/settings_language"/>
     </PreferenceCategory>
 </PreferenceScreen>
