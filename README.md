@@ -11,8 +11,8 @@ Any and all feature requests are welcome :)
 - [x] Settings
 - [x] Dark mode
 - [ ] Log out button
-- [ ] Colors for lessons
-- [ ] More language support (English and Swedish)
+- [x] Colors for lessons
+- [x] More language support (English and Swedish)
 - [ ] Upload to play store
 - [ ] Multiple account support
 
